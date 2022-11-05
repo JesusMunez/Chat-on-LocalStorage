@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import EmojiPicker from 'emoji-picker-react'
 
 import LinkClip from '../img/LinkClip.png'
 import Smiley from '../img/Smiley.png'
@@ -8,6 +9,7 @@ import Smiley from '../img/Smiley.png'
 const Chat = () => {
     const { room } = useParams()
     const location = useLocation()
+    const [showPicker, setShowPicker] = useState(false)
     // console.log(location)
     const data: any = localStorage.getItem(`${room}`)
     const dataPars = JSON.parse(data)
@@ -16,6 +18,20 @@ const Chat = () => {
     console.log(dataPars)
     // const messages: any[] = []
     const [messages, setMessages] :any[] = useState(dataPars || [])
+
+    const onEmojiClick = (emojiData: any, event: any) => {
+        setValue(prevInput => prevInput + emojiData.emoji);
+        setShowPicker(false)
+    }
+
+    React.useEffect(() => {    
+        window.addEventListener('storage', () => {          
+            const x: any = localStorage.getItem(`${room}`)
+            const ch = JSON.parse(x)
+            setChat(ch)  
+        });       
+    }, )
+
     const sendMessage = () => {
         if (value !== '') {
             messages.push({
@@ -28,39 +44,48 @@ const Chat = () => {
             const x: any = localStorage.getItem(`${room}`)
             const ch = JSON.parse(x)
             setChat(ch)
+            setValue('')
         }        
     }
     console.log(chat)
     return (
         <>
             <ChatName>Room: {room} </ChatName>
-            <div>
+            {/* <div>
                 Chat
-            </div>
+            </div> */}
             <ChatArea>
                 {chat.map(item => 
                     location.state.login === item.name ? 
                     <div key={item.id}>
-                        {item.date} {item.name}
+                        {item.date}
                         <MyMessage>
                             {item.text}
                         </MyMessage>
                     </div>
                     :
                     <div key={item.id}>
-                        {item.date} {item.name}
+                        {item.date} {item.name}:
                         <TheirMessage>
                             {item.text}
                         </TheirMessage>
                     </div>)}
+                    {/* {showPicker && <EmojiPicker onEmojiClick={onEmojiClick}/>} */}
+                    
             </ChatArea>
+            
             <BottomContainer>
                 <InputContainer>
                     <img src={LinkClip} alt='clip' width='32px' height='32px'/>
                     <InputMessage value={value} onChange={e => setValue(e.target.value)} placeholder="Написать сообщение..." />
                     
-                    <img src={Smiley} alt='smiley' width='32px' height='32px'/>
-                </InputContainer>
+                    <ImgIcon src={Smiley} alt='smiley' 
+                        onClick={() => setShowPicker(val => !val) }/>
+                    {/* {showPicker && <EmojiPicker onEmojiClick={onEmojiClick}/>} */}
+                    <EmojiContainer>
+                        {showPicker && <EmojiPicker onEmojiClick={onEmojiClick}/>}
+                    </EmojiContainer>
+                </InputContainer>                
                 {/* <InputMessage value={value} onChange={e => setValue(e.target.value)} placeholder="Написать сообщение..." />
                 <img src={LinkClip} alt='clip' />
                 <img src={Smiley} alt='clip' /> */}
@@ -79,8 +104,10 @@ const ChatName = styled.div`
 `
 
 const ChatArea = styled.div`
+    position: relative;
     width: 100%;
-    height: 80vh;
+    height: 85vh;
+    padding-bottom: 15px;
     overflow-y: auto;
     background: #F0F4FA;
 `
@@ -89,7 +116,7 @@ const BottomContainer = styled.div`
     margin-top: 25px;
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: center;
 `
 
 const InputMessage = styled.input`
@@ -130,6 +157,7 @@ const MyMessage = styled.div`
     color: #FFFFFF;
     background: #5B96F7;
     border-radius: 16px;
+    word-wrap: break-word;
 `
 
 const TheirMessage = styled.div`
@@ -153,4 +181,18 @@ const InputContainer = styled.div`
     height: 50px;
     background: #EAF2FE;
     border-radius: 10px;
+`
+
+const ImgIcon = styled.img`
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+`
+
+const EmojiContainer = styled.div`
+    position: absolute;  
+    margin-bottom: 60px;
+    margin-left: 55%;
+    bottom: 0;
+    left: 100;
 `
