@@ -5,8 +5,8 @@ import { useNavigate } from 'react-router-dom';
 const Login = () => {
     const [login, setLogin] = useState('')
     const [room, setRoom] = useState('')
-    const navigate = useNavigate()
-    console.log(login)
+    
+    const navigate = useNavigate()    
     return (
         <Container>
             <Form>
@@ -17,8 +17,12 @@ const Login = () => {
                 <Wrapper>
                     <Name>Комната</Name>
                     <LoginInput value={room} onChange={e => setRoom(e.target.value)} />
-                </Wrapper>
-                <button onClick={() => navigate(`/chat/${room}`, { state: {login}} )}>Войти</button>
+                </Wrapper>                
+                <BtnEnter onClick={() => {
+                    if (login !=='' && room !=='') {
+                        navigate(`/chat/${room}`, { state: {login}} )
+                    }
+                }}>Войти</BtnEnter>
             </Form>
         </Container>
     );
@@ -33,8 +37,8 @@ const Container = styled.div`
 `
 
 const Form = styled.div`
-    margin-top: 10%;
-    padding: 40px 20px 40px 20px;
+    margin-top: 15%;
+    padding: 40px 20px;
     width: 400px;
     height: 150px;
     background-color: #F0F4FA;
@@ -45,6 +49,7 @@ const Wrapper = styled.div`
     margin-top: 20px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 `
 
 const Name = styled.div`
@@ -55,4 +60,17 @@ const Name = styled.div`
 const LoginInput = styled.input`
     width: 200px;
     height: 30px;
+    /* border: none; */
+    border-radius: 8px;
+`
+
+const BtnEnter = styled.button`
+    margin-top: 15px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: none;
+    background: #5B96F7;
+    font-size: 20px;
+    color: #fff;
+    cursor: pointer;
 `

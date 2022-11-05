@@ -9,19 +9,20 @@ import Smiley from '../img/Smiley.png'
 const Chat = () => {
     const { room } = useParams()
     const location = useLocation()
-    const [showPicker, setShowPicker] = useState(false)
+    const [showEmoji, setShowEmoji] = useState(false)
     // console.log(location)
     const data: any = localStorage.getItem(`${room}`)
     const dataPars = JSON.parse(data)
     const [value, setValue] = useState('')
     const [chat, setChat] = useState<any[]>(dataPars || [])
-    console.log(dataPars)
-    // const messages: any[] = []
+
+    // console.log(dataPars)
+    
     const [messages, setMessages] :any[] = useState(dataPars || [])
 
     const onEmojiClick = (emojiData: any, event: any) => {
         setValue(prevInput => prevInput + emojiData.emoji);
-        setShowPicker(false)
+        setShowEmoji(false)
     }
 
     React.useEffect(() => {    
@@ -50,10 +51,7 @@ const Chat = () => {
     console.log(chat)
     return (
         <>
-            <ChatName>Room: {room} </ChatName>
-            {/* <div>
-                Chat
-            </div> */}
+            <ChatName>Room: {room} </ChatName>            
             <ChatArea>
                 {chat.map(item => 
                     location.state.login === item.name ? 
@@ -65,13 +63,13 @@ const Chat = () => {
                     </div>
                     :
                     <div key={item.id}>
-                        {item.date} {item.name}:
+                        {item.date} 
+                        <NameSender>{item.name}:</NameSender>
                         <TheirMessage>
                             {item.text}
                         </TheirMessage>
                     </div>)}
-                    {/* {showPicker && <EmojiPicker onEmojiClick={onEmojiClick}/>} */}
-                    
+                    {/* {showPicker && <EmojiPicker onEmojiClick={onEmojiClick}/>} */}                    
             </ChatArea>
             
             <BottomContainer>
@@ -80,10 +78,9 @@ const Chat = () => {
                     <InputMessage value={value} onChange={e => setValue(e.target.value)} placeholder="Написать сообщение..." />
                     
                     <ImgIcon src={Smiley} alt='smiley' 
-                        onClick={() => setShowPicker(val => !val) }/>
-                    {/* {showPicker && <EmojiPicker onEmojiClick={onEmojiClick}/>} */}
+                        onClick={() => setShowEmoji(val => !val) }/>                    
                     <EmojiContainer>
-                        {showPicker && <EmojiPicker onEmojiClick={onEmojiClick}/>}
+                        {showEmoji && <EmojiPicker onEmojiClick={onEmojiClick}/>}
                     </EmojiContainer>
                 </InputContainer>                
                 {/* <InputMessage value={value} onChange={e => setValue(e.target.value)} placeholder="Написать сообщение..." />
@@ -112,45 +109,18 @@ const ChatArea = styled.div`
     background: #F0F4FA;
 `
 
-const BottomContainer = styled.div`
-    margin-top: 25px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-`
-
-const InputMessage = styled.input`
-    
-    width: 85%;
-    height: 50px;
-    background: #EAF2FE;
-    border: none;
-    border-radius: 10px;
-    /* padding-left: 10px; */
-    font-size: 16px;    
-    &:focus {
-        outline: none;
-    }
-    ::placeholder{
-        color: #709CE6;
-    }
-`
-
-const BtnSend = styled.button`
-    padding: 16px 18px;
-    border-radius: 10px;
-    border: none;
-    background: #5B96F7;
-    font-size: 16px;
-    color: #fff;
-    cursor: pointer;
+const NameSender = styled.div`
+    margin-top: 10px;
+    margin-left: 25px;
+    font-size: 14px;
+    text-align: start;
 `
 
 const MyMessage = styled.div`
     margin-top: 10px;
     margin-left: auto;
-    margin-right: 10px;
-    width: 10%;
+    margin-right: 10px;       
+    width: 15%;
     padding: 13px 20px 13px 20px;
     font-weight: 600;
     font-size: 14px;
@@ -158,12 +128,12 @@ const MyMessage = styled.div`
     background: #5B96F7;
     border-radius: 16px;
     word-wrap: break-word;
+    text-align: start;
 `
 
-const TheirMessage = styled.div`
-    margin-top: 10px;
+const TheirMessage = styled.div`    
     margin-left: 10px;
-    width: 10%;
+    width: 15%;
     padding: 13px 20px 13px 20px;    
     font-weight: 600;
     font-size: 14px;
@@ -171,6 +141,14 @@ const TheirMessage = styled.div`
     background: #fff;
     border-radius: 16px;
     word-wrap: break-word;
+    text-align: start;
+`
+
+const BottomContainer = styled.div`
+    margin-top: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `
 
 const InputContainer = styled.div`
@@ -183,9 +161,34 @@ const InputContainer = styled.div`
     border-radius: 10px;
 `
 
+const InputMessage = styled.input`    
+    width: 85%;
+    height: 50px;
+    background: #EAF2FE;
+    border: none;
+    border-radius: 10px;    
+    font-size: 16px;    
+    &:focus {
+        outline: none;
+    }
+    ::placeholder{
+        color: #709CE6;
+    }
+`
+
 const ImgIcon = styled.img`
     width: 32px;
     height: 32px;
+    cursor: pointer;
+`
+
+const BtnSend = styled.button`
+    padding: 16px 18px;
+    border-radius: 10px;
+    border: none;
+    background: #5B96F7;
+    font-size: 16px;
+    color: #fff;
     cursor: pointer;
 `
 
